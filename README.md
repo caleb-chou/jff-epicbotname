@@ -1,0 +1,2 @@
+# jff-epicbotname
+Discord bot
