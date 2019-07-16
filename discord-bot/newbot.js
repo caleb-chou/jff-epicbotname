@@ -1,3 +1,4 @@
+// Imports
 const Discord = require('discord.js');
 const auth = require('./auth.json');
 const ytdl = require('ytdl-core');
@@ -5,13 +6,16 @@ const YouTube = require('simple-youtube-api');
 
 const bot = new Discord.Client();
 const yt = new YouTube(auth.apikey);
-bot.login(auth.token);
 
+
+// Authenticate for bot
+bot.login(auth.token);
 bot.on('ready', async () => {
     console.log(`${bot.user.username} is online!`);
     bot.user.setActivity('coolcatcoding! | `help');
 });
 
+// Get commands
 bot.on('message', async message => {
     if (message.content.substring(0, 1) == '`') {
         var args = message.content.substring(1).split(' ');
@@ -85,6 +89,7 @@ bot.on('message', async message => {
         }
     }
 });
+// Functions for processing songs
 var servers = {};
 function play(connection, message) {
     var server = servers[message.guild.id];
