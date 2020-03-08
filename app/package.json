@@ -1,0 +1,11 @@
+{
+	"name": "newbot",
+	"version": "0.0.1",
+	"description": "Test Discord bot",
+	"main": "bot.js",
+	"author": "cc",
+	"dependencies": {
+		"alphavantage": "^2.0.1",
+		"discord.js": "^11.6.1"
+	}
+}

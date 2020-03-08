@@ -1,0 +1,3 @@
+# jff-newbot
+
+Discord bot
