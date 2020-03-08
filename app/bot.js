@@ -3,7 +3,6 @@ const auth= require('./auth.json');
 const Discord = require('discord.js');
 
 // Init APIs
-const alpha  = require('alphavantage')({key: auth.alpha_vantage_key});
 const bot = new Discord.Client();
 
 // Channel IDs 
@@ -137,6 +136,16 @@ bot.on('message', async message => {
                 message.channel.bulkDelete(amount).then(() => { // Bulk deletes messages
                     message.channel.send(`Deleted ${amount} message(s)`); // Sends message that messages have been deleted
                 });
+                break;
+            
+
+            // Mafia
+            case 'mafia':
+                var master = message.member.user.tag;
+                var master_name = master.substring(0, master.length - 5)
+                var game_msg = await message.channel.send(`${master_name} has started a mafia match!`);
+                await game_msg.react("➕");
+                await game_msg.react("✅");
                 break;
 
             case 'id':
