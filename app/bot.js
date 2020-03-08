@@ -28,10 +28,11 @@ const prefix = '&';
 
 // Commands- Key is command, value is help
 var commands = {
-    'help': 'Returns a list of commands.',
+    'help' : 'Returns a list of commands.',
     'check': 'Returns stock data for the argument. Usage: `check <SYMBOL>`',
     'roll' : 'Returns a random number from 0 to <param> or <param1> to <param2> inclusive. Usage: `roll <MAX>` or `roll <MIN> <MAX>`',
-    'poll' : 'Creates a poll with the provided arguments as options. Usage: `poll "question" :emoji1: :emoji2:`'
+    'poll' : 'Creates a poll with the provided arguments as options. Usage: `poll "question" :emoji1: :emoji2:`',
+    'trim' : 'Deletes specified number of messages. Usage: `trim <# of messages>'
 };
 
 // Gets formats date in YYYY-MM-DD
