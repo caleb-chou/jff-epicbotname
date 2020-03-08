@@ -125,6 +125,18 @@ bot.on('message', async message => {
                 }
             break;
 
+            // Trim command
+            case 'trim':
+                var amount = args[1]; // Argument passed for # of messages to delete
+                message.channel.bulkDelete(amount).then(() => { // Bulk deletes messages
+                    message.channel.send(`Deleted ${amount} message(s)`); // Sends message that messages have been deleted
+                });
+                break;
+
+            case 'id':
+                message.channel.send(`@${message.member.user.tag}`);
+                console.log(message.member.user.tag);
+                break;
             // Handle invalid commands
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
         }
