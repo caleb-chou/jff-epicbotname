@@ -79,7 +79,12 @@ bot.on('message', async message => {
                 }
                 message.channel.send(`Valid commmands are:\n${response}`);
             } else { // get help for specific command
-                message.channel.send(commands[args[1]]);
+                var keys = Object.keys(commands);
+                if(keys.includes(args[1])) {
+                    message.channel.send(commands[args[1]]);
+                } else {
+                    message.channel.send('That command does not exist.');
+                }
             }
                  break;
             // Roll command
