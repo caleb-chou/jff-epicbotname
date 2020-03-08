@@ -50,7 +50,7 @@ bot.on('message', async message => {
     var content = message.content;
 
     if(content.substring(0,1) == prefix) {
-        var args = content.substring(1).split(' ');
+        var args = content.substring(1).split(/\s+/);
         var cmd  = args[0];
 
         console.log(`Executed ${cmd} with parameter(s): ${args}`);
@@ -88,10 +88,11 @@ bot.on('message', async message => {
                 message.channel.send(response);
             }); break;
             case 'poll': 
-                var poll = args[1];
+                var poll = content.match(/".+"/)[0].replace(/"/g,'');
                 let poll_msg = await bot.channels.get(channel_ids['poll']).send(poll);
-                for(var i = 2; i < args.length; i++) {
-                    await poll_msg.react(args[i]);
+                var reactions = content.replace(/".+"/, '').split(/\s+/);
+                for(var i = 1; i < reactions.length; i++) {
+                    await poll_msg.react(reactions[i]);
                 }
             break;
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
