@@ -89,9 +89,9 @@ bot.on('message', async message => {
             }); break;
             case 'poll': 
                 var poll = args[1];
-                var the_poll = bot.channels.get(channel_ids['poll']).send(poll);
+                let poll_msg = await bot.channels.get(channel_ids['poll']).send(poll);
                 for(var i = 2; i < args.length; i++) {
-                    the_poll.react(args[i]);
+                    await poll_msg.react(args[i]);
                 }
             break;
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
