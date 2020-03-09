@@ -141,13 +141,82 @@ bot.on('message', async message => {
 
             // Mafia
             case 'mafia':
-                var master = message.member.user.tag;
-                var master_name = master.substring(0, master.length - 5)
-                var game_msg = await message.channel.send(`${master_name} has started a mafia match!`);
-                await game_msg.react("➕");
-                await game_msg.react("✅");
-                break;
 
+                // Read data
+                'use strict';
+                const fs = require('fs');
+                let rawdata = fs.readFileSync('mafia.json');
+                let mafia = JSON.parse(rawdata);
+
+                // Check if game is going on
+                if(mafia.ingame) {
+                    await message.channel.send('A game is already going on!');
+                } else {
+                    // Set up mafia
+                    mafia = {"ingame":false, "master":"", "players":[]}
+
+                    // Master is person who starts mafia
+                    mafia.master = message.member.user.tag;
+                    var master_name = mafia.master.substring(0, mafia.master.length - 5);
+
+                    // Send game message to react to
+                    var game_msg = await message.channel.send(
+                    `${master_name} has started a mafia match!
+                     Please react with a + to add yourself to the game!
+                     Message &leave to leave the game!
+                     The game will start in 60 seconds or when ${master_name} reacts to start!
+                    `);
+                    await game_msg.react("➕");
+                    await game_msg.react("✅");
+                    
+                    // Collect Reactions
+                    const time = 60000; // 1minute
+
+                    const filter = (reaction, user) => {
+                        if (reaction.emoji.name == '➕' && !mafia.players.includes(user.tag)) {
+                            message.channel.send(`${user.username} has joined the game!`)
+                            mafia.players.push(user.tag)
+                            return true;
+                        }
+                        if (reaction.emoji.name == '✅' && user.tag == mafia.master) {
+                            message.channel.send(`${user.username} has begun the game!`)
+                            return true;
+                        }
+                        return false;
+                    };
+            
+                    const collector = game_msg.createReactionCollector(filter, { time: time });
+            
+                    collector.on('collect', (reaction, reactionCollector) => {
+                        if(reaction.emoji.name == '✅') {
+                            collector.stop();
+                        }
+                    });
+                    collector.on('end', collected => {
+                        if(mafia.players.length > 2) {
+                            message.channel.send('There must be at least 3 players!');
+                        } else {
+                            mafia.ingame = false;
+                            var player_names = "";
+                            for(var i = 0; i < mafia.players.length; i++) {
+                                var player_name = mafia.players[i];
+                                player_names += player_name.substring(0, player_name.length - 5) + ", "
+                            }
+
+                            message.channel.send(`${player_names.substring(0, player_names.length - 2)} are playing mafia!`);
+
+
+                            'use strict';
+                            const fs = require('fs');
+                            let data = JSON.stringify(mafia);
+                            fs.writeFileSync('mafia.json', data);
+                        }
+                    });
+                }
+                break;
+            
+
+            
             case 'id':
                 message.channel.send(`@${message.member.user.tag}`);
                 console.log(message.member.user.tag);
@@ -157,3 +226,9 @@ bot.on('message', async message => {
         }
     }
 });
+
+
+function set_up_mafia(mafia) {
+    players = mafia.players
+
+}
