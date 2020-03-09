@@ -10,6 +10,9 @@ const channel_ids = {
     'poll' : '686017506041004055'
 }
 
+// Read/Write
+const fs = require('fs');
+
 // Authetication with discord
 bot.login(auth.discord_token);
 bot.on('ready', async () => {
@@ -144,9 +147,7 @@ bot.on('message', async message => {
 
                 // Read data
                 'use strict';
-                const fs = require('fs');
-                let rawdata = fs.readFileSync('mafia.json');
-                let mafia = JSON.parse(rawdata);
+                var mafia = read('mafia.json');
 
                 // Check if game is going on
                 if(mafia.ingame) {
@@ -205,18 +206,33 @@ bot.on('message', async message => {
 
                             message.channel.send(`${player_names.substring(0, player_names.length - 2)} are playing mafia!`);
 
-
-                            'use strict';
-                            const fs = require('fs');
-                            let data = JSON.stringify(mafia);
-                            fs.writeFileSync('mafia.json', data);
+                            write(mafia, 'mafia.json')
                         }
                     });
                 }
                 break;
             
-
+            case 'timeout':
+                var timeout = '674474117319229500'
+                var role = message.guild.roles.get(timeout);
+                var member = message.mentions.members.first();
+                member.addRole(role).catch(console.error);
+                
+                message.channel.send(`Sent ${member} to timeout`)
+                break;
             
+            // map tags to ids
+            case 'mapids':
+                var users = message.guild.client.users;
+                var tag_to_id = {};
+                for (const [key, user] of users.entries()) {
+                    user_tag = user.username + "#" + user.discriminator;
+                    tag_to_id[user_tag] = key
+                }
+
+                write(tag_to_id, 'tag_to_id.json')
+                break;
+
             case 'id':
                 message.channel.send(`@${message.member.user.tag}`);
                 console.log(message.member.user.tag);
@@ -227,6 +243,22 @@ bot.on('message', async message => {
     }
 });
 
+function getId(tag) {
+    ids = read('timeout.json')
+    return ids[tag]
+}
+
+function read(filename) {
+    'use strict';
+    var rawdata = fs.readFileSync(filename);
+    return JSON.parse(rawdata);
+}
+
+function write(data, filename) {
+    'use strict';
+    var d = JSON.stringify(data);
+    fs.writeFileSync(filename, d);
+}
 
 function set_up_mafia(mafia) {
     players = mafia.players
