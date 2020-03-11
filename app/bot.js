@@ -81,9 +81,9 @@ bot.on('message', async message => {
             } else { // get help for specific command
                 var keys = Object.keys(commands);
                 if(keys.includes(args[1])) {
-                    message.channel.send(commands[args[1]]);
+                    message.channel.send(commands[args[1]]); // If command exists
                 } else {
-                    message.channel.send('That command does not exist.');
+                    message.channel.send('That command does not exist.'); // If command doesn't exist
                 }
             }
                  break;
