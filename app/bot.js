@@ -417,8 +417,8 @@ bot.on('message', async message => {
                 break;
             
             case 'timeout':
-                var admin_role = "686448867306504258"; //"674476313343557632";
-                var timeout = "686438445522092052"; //"686438951354892290";
+                var admin_role = config.roles.admin; //"674476313343557632";
+                var timeout = config.roles.timeout; //"686438951354892290";
                 var role = message.guild.roles.get(timeout);
 
                 if(message.member.roles.has(admin_role)) {
@@ -440,19 +440,6 @@ bot.on('message', async message => {
                     message.channel.send(`Nice try ${message.member}, go to timeout loser`);
                 }
                 break;
-            
-            // map tags to ids
-            case 'mapids':
-                var users = message.guild.client.users;
-                var tag_to_id = {};
-                for (const [key, user] of users.entries()) {
-                    user_tag = user.username + "#" + user.discriminator;
-                    tag_to_id[user_tag] = key
-                }
-
-                write(tag_to_id, 'tag_to_id.json')
-                break;
-
             case 'id':
                 message.channel.send(`@${message.member.user.tag}`);
                 console.log(message.member.user.tag);
@@ -462,10 +449,6 @@ bot.on('message', async message => {
                 console.log(message.channel.permissionsFor(message.member).serialize(false))
                 break;
                     
-            case 'channel':
-                create_hidden_channel(message, message.author, "test", true, false);
-                break;
-            
             case 'test':
                 break;
 
