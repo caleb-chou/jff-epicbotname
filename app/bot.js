@@ -422,30 +422,27 @@ bot.on('message', async message => {
                 break;
             
             case 'timeout':
-                var admins = ["348149413618647040", "302515756976046081"];
-                var timeout = '674474117319229500'
+                var admin_role = "686448867306504258"; //"674476313343557632";
+                var timeout = "686438445522092052"; //"686438951354892290";
                 var role = message.guild.roles.get(timeout);
-                if(admins.includes(message.author.id)) {
+
+                if(message.member.roles.has(admin_role)) {
                     var member = message.mentions.members.first();
-                    member.addRole(role).catch(console.error);
-                    message.channel.send(`Sent ${member} to timeout`)
+                    if(member.roles.has(timeout)) {
+                        member.removeRole(role).catch(console.error);
+                        message.channel.send(`Removed ${member} from timeout`)
+                    } else {
+                        member.addRole(role).catch(console.error);
+                        message.channel.send(`Sent ${member} to timeout`)
+                        if(args.length == 3) {
+                            setTimeout(function(){member.removeRole(role).catch(console.error);
+                                message.channel.send(`Removed ${member} from timeout after ${args[2]} seconds...`)}, args[2] * 1000);
+                        }
+                    }
+                    
                 } else {
-                    message.author.addRole(role).catch(console.error);
-                    message.channel.send(`Nice try ${message.author}, go to timeout loser`);
-                }
-                break;
-            
-            case 'end_timeout':
-                var admins = ["348149413618647040", "302515756976046081"];
-                var timeout = '674474117319229500'
-                var role = message.guild.roles.get(timeout);
-                if(admins.includes(message.author.id)) {
-                    var member = message.mentions.members.first();
-                    member.removeRole(role).catch(console.error);
-                    message.channel.send(`Saved ${member} from timeout`)
-                } else {
-                    message.author.addRole(role).catch(console.error);
-                    message.channel.send(`Nice try ${message.author}, go to timeout loser`);
+                    message.member.addRole(role).catch(console.error);
+                    message.channel.send(`Nice try ${message.member}, go to timeout loser`);
                 }
                 break;
             
