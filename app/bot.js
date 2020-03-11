@@ -6,11 +6,6 @@ const Discord = require('discord.js');
 const alpha  = require('alphavantage')({key: auth.alpha_vantage_key});
 const bot = new Discord.Client();
 
-// Channel IDs 
-const channel_ids = {
-    'poll' : '686017506041004055'
-}
-
 // Authetication with discord
 bot.login(auth.discord_token);
 bot.on('ready', async () => {
@@ -23,17 +18,17 @@ bot.on('ready', async () => {
     ).catch(console.error);
 });
 
+// Get configuration file
+const config = require('./config.json');
+
 // Prefix to communicate with bot
-const prefix = '&';
+const prefix = config.prefix;
+
+// Channel IDs 
+const channel_ids = config.channel_ids;
 
 // Commands- Key is command, value is help
-var commands = {
-    'help' : 'Returns a list of commands.',
-    'check': 'Returns stock data for the argument. Usage: `check <SYMBOL>`',
-    'roll' : 'Returns a random number from 0 to <param> or <param1> to <param2> inclusive. Usage: `roll <MAX>` or `roll <MIN> <MAX>`',
-    'poll' : 'Creates a poll with the provided arguments as options. Usage: `poll "question" :emoji1: :emoji2:`',
-    'trim' : 'Deletes specified number of messages. Usage: `trim <# of messages>`'
-};
+const commands = require('./commands.json');
 
 // Gets formats date in YYYY-MM-DD
 function formatDate(date) {
