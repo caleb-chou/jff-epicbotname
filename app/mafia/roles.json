@@ -1,0 +1,6 @@
+{
+    "Mafia": ["️0️⃣", "You are part of the mafia! Each round you will choose a member to kill. Work with your fellow mafia members to kill them all!"],
+    "Detective": ["1️⃣", "Detective! You are the only hope of this town! Each round you will choose a suspect to investigate. Work with the citizens to remove the mafia from this town!"],
+    "Citizen": ["2️⃣", "You are a normal citizen in this town! Work with your fellow citizens to rid this town of evil. Every round you will vote for a player to be lynched!"],
+    "Healer": ["3️⃣", "You are the savior of this town! Each round you will be able to choose someone to save. Choose wisely to save as many citizens as you can!"]
+}
