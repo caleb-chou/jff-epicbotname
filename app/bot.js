@@ -11,6 +11,9 @@ const mafia_lib = require('./mafia_lib.js');
 // Import dlz_utils
 const dlz_utils = require('./dlz_utils.js');
 
+// Get configuration file
+const config = require('./config.json');
+
 // Authetication with discord
 bot.login(auth.discord_token);
 bot.on('ready', async () => {
@@ -22,9 +25,6 @@ bot.on('ready', async () => {
         presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`)
     ).catch(console.error);
 });
-
-// Get configuration file
-const config = require('./config.json');
 
 // Prefix to communicate with bot
 const prefix = config.prefix;
@@ -157,15 +157,33 @@ bot.on('message', async message => {
                 break;
             
             case 'timeout':
-
                 var role = message.guild.roles.get(timeout);
-
                 if(message.member.roles.has(admin_role)) {
                     var member = message.mentions.members.first();
                     if(member.roles.has(timeout)) {
+                        // Remove timeout role
                         member.removeRole(role).catch(console.error);
                         message.channel.send(`Removed ${member} from timeout`)
+
+                        var timeout_roles = dlz_utils.read('timeout.json');
+                        for(var i = 0; i < timeout_roles[member.id].length; i++) {
+                            member.addRole(timeout_roles[member.id][i]).catch(console.error);
+                        }
                     } else {
+                        // Save roles before timeout (excluding everyone)
+                        var timeout_roles = dlz_utils.read('timeout.json');
+                        var roles = [];
+                        for(let [k, v] of member.roles) {
+                            if(k != config.roles.everyone) {
+                                roles.push(k);
+                            }
+                        }
+                        timeout_roles[member.id] = roles;
+                        dlz_utils.write(timeout_roles, 'timeout.json');
+                        for(var i = 0; i < roles.length; i++) {
+                            member.removeRole(roles[i]).catch(console.error);
+                        }
+
                         member.addRole(role).catch(console.error);
                         message.channel.send(`Sent ${member} to timeout`)
                         if(args.length == 3) {
