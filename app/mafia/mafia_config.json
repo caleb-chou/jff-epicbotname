@@ -1,0 +1,5 @@
+{
+    "queue_game_time": 60000,
+    "daytime_time": 30000,
+    "voting_msg_time": 5000
+}
