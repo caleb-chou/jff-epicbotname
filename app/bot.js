@@ -167,7 +167,6 @@ bot.on('message', async message => {
                                 message.channel.send(`Removed ${member} from timeout after ${args[2]} seconds...`)}, args[2] * 1000);
                         }
                     }
-                    
                 } else {
                     message.member.addRole(role).catch(console.error);
                     message.channel.send(`Nice try ${message.member}, go to timeout loser`);
