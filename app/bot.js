@@ -35,6 +35,9 @@ const channel_ids = config.channel_ids;
 // Commands- Key is command, value is help
 const commands = require('./commands.json');
 
+var admin_role = config.roles.admin; //"674476313343557632";
+var timeout = config.roles.timeout; //"686438951354892290";
+
 // Gets formats date in YYYY-MM-DD
 function formatDate(date) {
     var d = new Date(date),
@@ -133,10 +136,14 @@ bot.on('message', async message => {
 
             // Trim command
             case 'trim':
-                var amount = args[1]; // Argument passed for # of messages to delete
-                message.channel.bulkDelete(amount).then(() => { // Bulk deletes messages
-                    message.channel.send(`Deleted ${amount} message(s)`); // Sends message that messages have been deleted
-                });
+                if(message.member.roles.has(admin_role)) {
+                    var amount = args[1]; // Argument passed for # of messages to delete
+                    message.channel.bulkDelete(amount).then(() => { // Bulk deletes messages
+                        message.channel.send(`Deleted ${amount} message(s)`); // Sends message that messages have been deleted
+                    });
+                } else {
+                    message.channel.send('You do not have permissions to do this!');
+                }
                 break;
             
 
@@ -150,8 +157,7 @@ bot.on('message', async message => {
                 break;
             
             case 'timeout':
-                var admin_role = config.roles.admin; //"674476313343557632";
-                var timeout = config.roles.timeout; //"686438951354892290";
+
                 var role = message.guild.roles.get(timeout);
 
                 if(message.member.roles.has(admin_role)) {
@@ -170,6 +176,8 @@ bot.on('message', async message => {
                 } else {
                     message.member.addRole(role).catch(console.error);
                     message.channel.send(`Nice try ${message.member}, go to timeout loser`);
+                    setTimeout(function(){message.member.removeRole(role).catch(console.error);
+                        message.channel.send(`${message.member} is obese.`)}, 30 * 1000);
                 }
                 break;
             case 'id':
