@@ -150,8 +150,8 @@ bot.on('message', async message => {
                 break;
             
             case 'timeout':
-                var admin_role = "674476313343557632";
-                var timeout = "686438951354892290";
+                var admin_role = config.roles.admin; //"674476313343557632";
+                var timeout = config.roles.timeout; //"686438951354892290";
                 var role = message.guild.roles.get(timeout);
 
                 if(message.member.roles.has(admin_role)) {
@@ -173,7 +173,6 @@ bot.on('message', async message => {
                     message.channel.send(`Nice try ${message.member}, go to timeout loser`);
                 }
                 break;
-
             case 'id':
                 message.channel.send(`@${message.member.user.tag}`);
                 console.log(message.member.user.tag);
@@ -182,7 +181,7 @@ bot.on('message', async message => {
             case 'perms':
                 console.log(message.channel.permissionsFor(message.member).serialize(false))
                 break;
-            
+                    
             case 'test':
                 break;
 
