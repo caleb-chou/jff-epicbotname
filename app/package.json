@@ -6,6 +6,7 @@
 	"author": "cc",
 	"dependencies": {
 		"alphavantage": "^2.0.1",
-		"discord.js": "^11.6.2"
+		"discord.js": "^11.6.2",
+		"steamapi": "^2.0.7"
 	}
 }

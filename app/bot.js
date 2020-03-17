@@ -2,6 +2,10 @@
 const auth= require('./auth.json');
 const Discord = require('discord.js');
 
+// Authentication with SteamAPI
+const SteamAPI = require('steamapi');
+const steam = new SteamAPI(auth.steamapi);
+
 // Init APIs
 const bot = new Discord.Client();
 
@@ -57,6 +61,13 @@ function formatDate(date) {
 bot.on('message', async message => {
     // Message Content
     var content = message.content;
+
+    if(message.content.match(/!hunt.*/)) {
+        message.channel.send('I AM OBESE');
+    }
+    //if(message.member.user.username.match(/.*jjdsjk.*/)) {
+    //    message.channel.send('🚨 TIMEOUT! 🚨');
+    //}
 
     // If it matches the prefix, treat is as commands
     if(content.substring(0,1) == prefix) {
@@ -209,7 +220,27 @@ bot.on('message', async message => {
                     
             case 'test':
                 break;
+            
+            case 'csgostats':
+                if(args.length < 2) {
+                    message.channel.send('Not enough arguments.');
+                } else {
+                    steam.getUserStats(args[1],'730').then(data => {
+                        console.log(data.stats);
+                        var stats = data.stats;
+                        console.log(stats);
+                        message.channel.send(`\`\`\`md\n# ${args[2]}\n- KDR: \t\t\t${stats.total_kills/stats.total_deaths}\n- Accuracy:\t\t${stats.total_shots_hit/stats.total_shots_fired}\`\`\``)
+                        .catch(console.error);
+                    });
+                }
+                break;
+            case 'whoObese':
+                message.channel.send('ERNEST LU');
+            break;
 
+            case 'didiask':
+                message.channel.send('ɴᴏᴡ ᴘʟᴀʏɪɴɢ:\nWho asked (Feat: No one) ───────────⚪── ◄◄⠀▐▐ ⠀►► 5:12/ 7:𝟻𝟼 ───○ 🔊⠀ ᴴᴰ  ⚙️');
+                break;
             // Handle invalid commands
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
         }
