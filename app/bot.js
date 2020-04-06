@@ -58,6 +58,10 @@ bot.on('message', async message => {
     // Message Content
     var content = message.content;
 
+    if(content.match(/.*tik.*tok.*/)) {
+        console.log(`Tik Tok detected in message '${content}' from ${message.member}`);
+    }
+
     // If it matches the prefix, treat is as commands
     if(content.substring(0,1) == prefix) {
 
