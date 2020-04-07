@@ -38,6 +38,8 @@ const commands = require('./commands.json');
 var admin_role = config.roles.admin; //"674476313343557632";
 var timeout = config.roles.timeout; //"686438951354892290";
 
+var channels = [];
+
 // Gets formats date in YYYY-MM-DD
 function formatDate(date) {
     var d = new Date(date),
@@ -212,10 +214,39 @@ bot.on('message', async message => {
                 break;
                     
             case 'test':
+                console.log(message.member.voiceChannel.parentID);
                 break;
+            
+            case 'crvc':
+                var channel_name = args[1];
+                
 
+                await message.member.guild.createChannel(channel_name, {
+                    type   : 'voice',
+                    parent : message.member.voiceChannel.parent,
+                    userLimit: (args.length > 2) ? args[2] : 1
+                }).then(
+                    async channel => {
+                        channels.push({newID : channel.id, guild : channel.guild});
+                        await message.member.setVoiceChannel(channel.id);
+                    }
+                );
+                message.channel.send(`Created new voice channel '${channel_name}'`);
+                break;
             // Handle invalid commands
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
         }
+    }
+});
+
+bot.on('voiceStateUpdate', async (oldMember, newMember) => {
+    if (channels.length >= 0) for(let i = 0; i < channels.length; i++) {
+        let ch = channels[i].guild.channels.find(x => x.id == channels[i].newID);
+
+        if(ch.members.size <= 0) {
+            await ch.delete();
+
+            return channels.splice(i, 1);
+        } 
     }
 });

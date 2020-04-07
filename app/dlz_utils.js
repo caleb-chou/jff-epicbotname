@@ -12,7 +12,7 @@ module.exports = {
     },
     write: function(data, filename) {
         'use strict';
-        var d = JSON.stringify(data);
+        var d = JSON.stringify(data, null, 4);
         fs.writeFileSync(filename, d);
     },
     shuffle: function(array) {

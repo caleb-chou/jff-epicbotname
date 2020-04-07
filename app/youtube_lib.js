@@ -8,6 +8,18 @@ var youtube = googleapis.youtube({
     auth: auth.youtube_key
  });
  
-module.exports = {
+ youtube.search.list({
+    part: 'snippet',
+    q: 'your search query'
+  }, function (err, data) {
+    if (err) {
+      console.error('Error: ' + err);
+    }
+    if (data) {
+      console.log(data)
+    }
+  });
 
+module.exports = {
+    
 }
