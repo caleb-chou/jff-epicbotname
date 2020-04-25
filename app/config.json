@@ -1,5 +1,5 @@
 {
-    "prefix"            : "&",
+    "prefix"            : "!",
     "channel_ids"       :  {
         "poll"          : "686017506041004055",
         "maincategory"  : "674470460200845337"

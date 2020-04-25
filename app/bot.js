@@ -142,7 +142,7 @@ bot.on('message', async message => {
 
             // Trim command
             case 'trim':
-                if(message.member.roles.has(admin_role)) {
+                if(message.member.hasPermission("ADMINISTRATOR")) {
                     var amount = args[1]; // Argument passed for # of messages to delete
                     message.channel.bulkDelete(amount).then(() => { // Bulk deletes messages
                         message.channel.send(`Deleted ${amount} message(s)`); // Sends message that messages have been deleted
@@ -217,21 +217,89 @@ bot.on('message', async message => {
                 console.log(message.member.voiceChannel.parentID);
                 break;
             
-            case 'crvc':
-                var channel_name = args[1];
-                
+            case 'vc':
+                if(message.member.roles.has(admin_role)) {
+                    var channel_name = args[1];
+                    
 
-                await message.member.guild.createChannel(channel_name, {
-                    type   : 'voice',
-                    parent : message.member.voiceChannel.parent,
-                    userLimit: (args.length > 2) ? args[2] : 1
-                }).then(
-                    async channel => {
-                        channels.push({newID : channel.id, guild : channel.guild});
-                        await message.member.setVoiceChannel(channel.id);
+                    await message.member.guild.createChannel(channel_name, {
+                        type   : 'voice',
+                        parent : message.member.voiceChannel.parent,
+                        userLimit: (args.length > 2) ? args[2] : 0
+                    }).then(
+                        async channel => {
+                            channels.push({newID : channel.id, guild : channel.guild});
+                            await message.member.setVoiceChannel(channel.id);
+                        }
+                    );
+                    message.channel.send(`Created new voice channel '${channel_name}'`);
+                } else {
+                    message.channel.send(`You don't have permissions to create voice channels.`);
+                }
+                break;
+            case 'elim':
+                var people = [];
+                for (var i = 1; i < args.length; i++) {
+                    people.push(args[i]);
+                }
+                while(people.length > 1) {
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    dlz_utils.shuffle(people);
+                    message.channel.send(`**${people[0]}** has been eliminated!`);
+                    people.shift();
+                }
+                message.channel.send(`The winner is **${people[0]}**!`);
+                console.log(people[0]);
+                break;
+            case 'pick':
+                var people = [];
+                for (var i = 1; i < args.length; i++) {
+                    people.push(args[i]);
+                }
+                dlz_utils.shuffle(people);
+                message.channel.send(`Selected **${people[0]}**`);
+                console.log(people[0]);
+                break;
+            case 'mimic':
+                var send_message = '';
+                for(var v = 1; v < args.length; v++) {
+                    
+                    send_message += args[v];
+                    console.log(send_message);
+                }
+                message.channel.send(send_message);
+                break; 
+            case 'poke':
+                ///var poke = new Discord.MessageEmbed()
+                //    .setColor('#05b077')
+                //    .setDescription('**A wild pokemon has appeared!**\nGuess the pokémon аnd type .cаtch <pokémon> to\n cаtch it!')
+                //    .setImage('./res/img/poke/rayquaza.png');
+                //message.channel.send(poke);
+                var pokemon = {
+                    'Rayquaza' : 'https://i.imgur.com/apuDXA9.png',
+                    'Dialga'   : 'https://i.imgur.com/p4ariHV.png',
+                    'Groudon'  : 'https://i.imgur.com/F49hmFs.png'
+                }
+                var selection = 'Dialga';
+                message.channel.send({
+                    "embed": {
+                        "description": "**A wild pokemon has appeared!**\nGuess the pokémon аnd type .cаtch <pokémon> to\n cаtch it!",
+                        "color": 2469763,
+                        "image": {
+                            "url": pokemon[selection]
+                        }
                     }
-                );
-                message.channel.send(`Created new voice channel '${channel_name}'`);
+                });
+                // message.delete();
+                const collector = new Discord.MessageCollector(message.channel, m => m.content.includes('.catch'));
+                collector.on('collect', m => {
+                    if (m.content.toLowerCase().includes(selection.toLowerCase())) {
+                        message.channel.send(`Congratulations ${m.author}! You caught a level ${Math.floor(Math.random() * 50) + 1} ${selection}! Added to Pokédex.`);
+                        collector.stop();
+                    } else {
+                        message.channel.send('This is the wrong pokémon!');
+                    }
+                });
                 break;
             // Handle invalid commands
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;

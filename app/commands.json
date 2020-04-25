@@ -3,5 +3,8 @@
     "check": "Returns stock data for the argument. Usage: `check <SYMBOL>`",
     "roll" : "Returns a random number from 0 to <param> or <param1> to <param2> inclusive. Usage: `roll <MAX>` or `roll <MIN> <MAX>`",
     "poll" : "Creates a poll with the provided arguments as options. Usage: `poll \"question\" :emoji1: :emoji2:`",
-    "trim" : "Deletes specified number of messages. Usage: `trim <# of messages>`"
+    "trim" : "Deletes specified number of messages. Usage: `trim <# of messages>`",
+    "vc"   : "Creates a new channel named `<first argument>` with the size `<second argument>`. Size argument is optional (default: no limit). Usage: `vc <name> <size>`",
+    "elim" : "Randomly eliminates arguments until one remains. Usage: `elim arg1 arg2 etc`",
+    "pick" : "Randomly selects one argument. Usage: `pick arg1 arg2 etc`"
 }
