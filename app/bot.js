@@ -34,11 +34,15 @@ const channel_ids = config.channel_ids;
 
 // Commands- Key is command, value is help
 const commands = require('./commands.json');
+const { default: OsuAPI } = require('./OsuAPI');
 
 var admin_role = config.roles.admin; //"674476313343557632";
 var timeout = config.roles.timeout; //"686438951354892290";
 
 var channels = [];
+
+var Osu = require('./OsuAPI')
+const osu = new Osu(auth.osu_api_key);
 
 // Gets formats date in YYYY-MM-DD
 function formatDate(date) {
@@ -301,6 +305,47 @@ bot.on('message', async message => {
                     }
                 });
                 break;
+            case 'osu':
+                user = args[1];
+                user_data = await osu.getUser(user);
+                user_data = user_data[0];
+                console.log(user_data);
+                const data = {
+                    "title": `${user_data['username']} (Rank: #${user_data['pp_rank']})`,
+                    "description": `Been playing since ${user_data['join_date']}.`,
+                    "url": `https://osu.ppy.sh/u/${user_data['user_id']}`,
+                    "color": 16731804,
+                    "timestamp": new Date(),
+                    "footer": {
+                        "icon_url": message.author.avatarURL,
+                        "text": message.author.username
+                    },
+                    "thumbnail": {
+                        "url": osu.getUserImageURL(user_data['user_id'])
+                    },
+                    "author": {
+                        "name": 'osu!',
+                        "url": 'https://osu.ppy.sh/',
+                        "icon_url": 'https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png'
+                    },
+                    "fields": [
+                        {
+                            "name" : "Accuracy",
+                            "value": `${user_data['accuracy'].substring(0,user_data['accuracy'].indexOf('.') + 3)}%`
+                        },
+                        {
+                            "name" : "PP",
+                            "value": `${user_data['pp_raw']}`
+                        },
+                        {
+                            "name" : "Top Plays",
+                            "value": "Harumachi Clover you fucking farmer"
+                        }
+                    ]
+                  };
+                  message.channel.send({embed: data});
+                  
+                  break;
             // Handle invalid commands
             default: message.channel.send(`'${cmd}' is not a valid command.`); break;
         }
