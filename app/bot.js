@@ -20,7 +20,7 @@ bot.on('ready', async () => {
     console.log(`${bot.user.username} is online.`);
     // Set bot activity
     bot.user.setActivity(
-        `ssp is obese | ${prefix}help`
+        `@Chewie4k | ${prefix}help`
     ).then(
         presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`)
     ).catch(console.error);
@@ -310,6 +310,10 @@ bot.on('message', async message => {
                 user_data = await osu.getUser(user);
                 user_data = user_data[0];
                 console.log(user_data);
+
+                const top = await osu.getUserBest(user, 0, 5);
+                console.log(top);
+
                 const data = {
                     "title": `${user_data['username']} (Rank: #${user_data['pp_rank']})`,
                     "description": `Been playing since ${user_data['join_date']}.`,
@@ -330,16 +334,18 @@ bot.on('message', async message => {
                     },
                     "fields": [
                         {
-                            "name" : "Accuracy",
-                            "value": `${user_data['accuracy'].substring(0,user_data['accuracy'].indexOf('.') + 3)}%`
+                            "name"  : "Accuracy",
+                            "value" : `${user_data['accuracy'].substring(0,user_data['accuracy'].indexOf('.') + 3)}%`,
+                            "inline": true
                         },
                         {
-                            "name" : "PP",
-                            "value": `${user_data['pp_raw']}`
+                            "name"  : "PP",
+                            "value" : `${user_data['pp_raw']}`,
+                            "inline": true
                         },
                         {
-                            "name" : "Top Plays",
-                            "value": "Harumachi Clover you fucking farmer"
+                            "name"  : "Top Plays",
+                            "value" : `${top[0]['beatmap_id']}\tCombo: ${top[0]['maxcombo']}\tScore: ${top[0]['score']}\tRank: ${top[0]['rank']}`
                         }
                     ]
                   };
